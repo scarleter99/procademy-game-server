@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+
 using namespace std;
 
 static int g_seed;
