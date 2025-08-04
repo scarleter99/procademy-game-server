@@ -145,7 +145,7 @@ void mallocTest2() {
     *p = 0; // UB
 }
 
-struct alignas(64) cashHitTestStruct {
+struct alignas(64) casheHitTestStruct {
     alignas(64) int a;
     int b;
     int c;

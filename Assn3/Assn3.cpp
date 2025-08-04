@@ -42,7 +42,7 @@ void printArr(int time) {
 
 void dfs1(int y, int x){
     arr[y][x] = '.';
-    printArr(20);
+    printArr(0);
 
     for (int i = 0; i < 4; i++) {
         int ny = y + dy[i];
@@ -63,40 +63,12 @@ void dfs1(int y, int x){
 void dfs2() {
     stack<pair<int, int>> st;
     st.push({ 0, 0 });
+    arr[0][0] = '.';
     
     int y, x;
     while (st.size()) {
         tie(y, x) = st.top();
         st.pop();
-        arr[y][x] = '.';
-        printArr(20);
-
-        for (int i = 0; i < 4; i++) {
-            int ny = y + dy[i];
-            int nx = x + dx[i];
-
-            if (ny < 0 || nx < 0 || ny >= n || nx >= m) {
-                continue;
-            }
-
-            if (arr[ny][nx] == ' ' || arr[ny][nx] == '.') {
-                continue;
-            }
-
-            st.push({ ny, nx });
-        }
-    }
-}
-
-void bfs() {
-    queue<pair<int, int>> q;
-    q.push({ 0, 0 });
-
-    int y, x;
-    while (q.size()) {
-        tie(y, x) = q.front();
-        q.pop();
-        arr[y][x] = '.';
         printArr(0);
 
         for (int i = 0; i < 4; i++) {
@@ -111,6 +83,36 @@ void bfs() {
                 continue;
             }
 
+            arr[ny][nx] = '.';
+            st.push({ ny, nx });
+        }
+    }
+}
+
+void bfs() {
+    queue<pair<int, int>> q;
+    q.push({ 0, 0 });
+    arr[0][0] = '.';
+
+    int y, x;
+    while (q.size()) {
+        tie(y, x) = q.front();
+        q.pop();
+        printArr(0);
+
+        for (int i = 0; i < 4; i++) {
+            int ny = y + dy[i];
+            int nx = x + dx[i];
+
+            if (ny < 0 || nx < 0 || ny >= n || nx >= m) {
+                continue;
+            }
+
+            if (arr[ny][nx] == ' ' || arr[ny][nx] == '.') {
+                continue;
+            }
+
+            arr[ny][nx] = '.';
             q.push({ ny, nx });
         }
     }
@@ -119,9 +121,13 @@ void bfs() {
 int main()
 {
     printArr(1000);
-    //dfs1(0, 0);
-    dfs2();
+    int s = GetTickCount();
+
+    dfs1(0, 0);
+    //dfs2();
     //bfs();
+
+    cout << GetTickCount() - s << endl;
 
     return 0;
 }
