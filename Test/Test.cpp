@@ -154,7 +154,9 @@ struct alignas(64) casheHitTestStruct {
 
 int main()
 {
-    mallocTest2();
+    int a = 0;
+    int* b = &a;
+    cout << *b;
 
     return 0;
 }
