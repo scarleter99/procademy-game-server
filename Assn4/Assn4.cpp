@@ -17,10 +17,10 @@ Line cacheTable[1 << idxSize][ways];
 
 void CheckCacheHit(void* a, string name, int size) {
     uint64_t addr = reinterpret_cast<uint64_t>(a);
-    uint64_t idx = (addr >> offsetSize) & ((1 << idxSize) - 1);
+    uint64_t idx = (addr >> offsetSize) & ((1ULL << idxSize) - 1);
     uint64_t tag = addr >> (offsetSize + idxSize);
     
-    cout << name << " - addr: " << bitset<16>(addr) << endl;
+    cout << name << " - addr: " << hex << /*bitset<16>*/(addr) << endl;
     cout << name << " - idx: " << hex << idx << ", tag:" <<  tag << endl;
 
     for (int i = 0; i < ways; i++) {
@@ -61,30 +61,30 @@ void CheckCacheHit(void* a, string name, int size) {
 
 int main()
 {
-    struct data {
+    struct Data {
         int a = 0;
-        int b = 0; //1110110100 111000
-        char arr1[64] = {}; //1110110100 111100
+        int b = 0;
+        char arr1[64] = {};
         int c = 0;
         char arr2[4096] = {};
         int d = 0;
-    } da;
+    } data;
     
 
-    CheckCacheHit(&da.a, "a", sizeof(da.a));
-    da.a = 1;
-    CheckCacheHit(&da.b, "b", sizeof(da.b));
-    da.b = 1;
-    CheckCacheHit(&da.arr1, "arr1", sizeof(da.arr1));
-    da.arr1[0] = 1;
-    CheckCacheHit(&da.c, "c", sizeof(da.c));
-    da.c = 1;
-    CheckCacheHit(&da.arr2, "arr2", sizeof(da.arr2));
-    da.arr2[0] = 1;
-    CheckCacheHit(&da.d, "d", sizeof(da.d));
-    da.d = 1;
+    CheckCacheHit(&data.a, "a", sizeof(data.a));
+    data.a = 1;
+    CheckCacheHit(&data.b, "b", sizeof(data.b));
+    data.b = 1;
+    CheckCacheHit(&data.arr1, "arr1", sizeof(data.arr1));
+    data.arr1[0] = 1;
+    CheckCacheHit(&data.c, "c", sizeof(data.c));
+    data.c = 1;
+    CheckCacheHit(&data.arr2, "arr2", sizeof(data.arr2));
+    data.arr2[0] = 1;
+    CheckCacheHit(&data.d, "d", sizeof(data.d));
+    data.d = 1;
 
-    CheckCacheHit(&da.a, "a", sizeof(da.a));
-    da.a = 1;
+    CheckCacheHit(&data.a, "a", sizeof(data.a));
+    data.a = 1;
 }
 
