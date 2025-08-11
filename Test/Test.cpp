@@ -152,6 +152,29 @@ struct alignas(64) casheHitTestStruct {
     int d;
 };
 
+class DATA3 {
+public:
+    int a;
+    int b;
+};
+
+class DATA3_2 {
+public:
+    int c;
+    int d;
+};
+
+DATA3 g_Player[100];
+DATA3_2 g_Player[100];
+
+void casheHitTest() {
+    for (int cnt = 0; cnt < 100; cnt++) {
+        if (g_Player[cnt].a == 0 && g_Player[cnt].b == 0) {
+
+        }
+    }
+}
+
 int main()
 {
     mallocTest2();
