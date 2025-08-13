@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-
 using namespace std;
 
 void assn1(const unsigned char c)
