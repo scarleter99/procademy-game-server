@@ -12,7 +12,7 @@ void timingGame() {
         system("cls");
         float now = (float)clock() / CLOCKS_PER_SEC;
         cout << now << " Sec" << endl << endl;
-        
+
         if (nowIdx < n) {
             float diff = now - g_Timing[nowIdx];
             if (_kbhit()) {

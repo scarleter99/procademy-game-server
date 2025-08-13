@@ -164,7 +164,7 @@ public:
 };
 
 DATA3 g_Player[100];
-DATA3_2 g_Player[100];
+DATA3_2 g_Player2[100];
 
 void casheHitTest() {
     for (int cnt = 0; cnt < 100; cnt++) {
