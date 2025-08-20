@@ -5,7 +5,6 @@
 #include <tuple>
 #include <windows.h>
 #include <cstdlib>
-
 using namespace std;
 
 string arr[9] = {
