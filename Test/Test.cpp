@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <windows.h>
 
+#pragma comment(lib, "winmm.lib")
+
 using namespace std;
 
 #define SHOW(V)     \
@@ -100,19 +102,6 @@ void MemoryCorruptionTest() {
     *p = 0x0001ffff;
 }
 
-void getTickCountTest() {
-    DWORD start = GetTickCount(); // 시스템이 시작된 후 경과한 시간(밀리초)을 윈도우가 반환
-    for (volatile int i = 0; i < 100000000; ++i);
-    DWORD end = GetTickCount();
-    std::cout << "GetTickCount() Elapsed time: " << (end - start) << " ms\n";
-
-    clock_t start2 = clock();  // 프로세스가 측정한 경과한 시간
-    for (volatile int i = 0; i < 100000000; ++i);
-    clock_t end2 = clock();
-    double duration = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
-    std::cout << "clock() Elapsed time: " << duration << " seconds" << std::endl;
-}
-
 struct DATA2 {
     char a;
     char b;
@@ -165,7 +154,7 @@ public:
 };
 
 DATA3 g_Player[100];
-DATA3_2 g_Player[100];
+DATA3_2 g_Player2[100];
 
 void casheHitTest() {
     for (int cnt = 0; cnt < 100; cnt++) {
@@ -175,11 +164,37 @@ void casheHitTest() {
     }
 }
 
+void getTickCountTest() {
+    DWORD start = GetTickCount64(); // 시스템이 시작된 후 경과한 시간(밀리초)을 윈도우가 반환
+    for (volatile int i = 0; i < 100000000; ++i);
+    DWORD end = GetTickCount64();
+    std::cout << "GetTickCount() Elapsed time: " << (end - start) << " ms\n";
+
+    clock_t start2 = clock();  // 프로세스가 측정한 경과한 시간
+    for (volatile int i = 0; i < 100000000; ++i);
+    clock_t end2 = clock();
+    double duration = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
+    std::cout << "clock() Elapsed time: " << duration << " seconds" << std::endl;
+}
+
+void timeGetTimeTest() {
+    timeBeginPeriod(1);
+
+    while (1) {
+        clock_t t = clock();
+        DWORD dwTick = GetTickCount64();
+        DWORD dwTick2 = timeGetTime();
+        cout << t << " " << dwTick << " " << dwTick2 << endl;
+    }
+}
+
+void __rdtscTest() {
+    __int64 start = __rdtsc();
+}
+
 int main()
 {
-    int a = 0;
-    int* b = &a;
-    cout << *b;
+    timeGetTimeTest();
 
     return 0;
 }
