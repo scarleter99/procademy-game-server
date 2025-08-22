@@ -22,15 +22,6 @@ int AssemblyTest(int a) {
     return c;
 }
 
-void TernaryOperatorTest() {
-    int a;
-    int b = 20;
-
-    a = b == 30 ? 10 : 20;
-
-    int c = sizeof(int);
-}
-
 void loopTest() {
     int a = 0;
     while (1) {
@@ -192,9 +183,41 @@ void __rdtscTest() {
     __int64 start = __rdtsc();
 }
 
+void fflushTest() {
+    FILE* pFile = nullptr;
+    fopen_s(&pFile, "TEST.txt", "wb");
+
+    char* pbuffer = (char*)malloc(4096 * 2);
+    memset(pbuffer, 0xaa, 4096 * 2);
+    int iret = fwrite(pbuffer, 1, 512, pFile);
+    cout << iret << " bytes write" << endl;
+    fflush(pFile);
+
+    Sleep(100000);
+
+    fclose(pFile);
+}
+
+void fseekTest() {
+    FILE* pFile = nullptr;
+    fopen_s(&pFile, "TEST.txt", "wb");
+
+    fseek(pFile, 0, SEEK_END);
+    int sizeFile = ftell(pFile);
+    char* pbuff = (char*)malloc(sizeFile);
+
+    fseek(pFile, 0, SEEK_SET);
+    fread(pbuff, 1, sizeFile, pFile);
+    rewind(pFile);
+
+    Sleep(100000);
+
+    fclose(pFile);
+}
+
 int main()
 {
-    timeGetTimeTest();
+    fseekTest();
 
     return 0;
 }
