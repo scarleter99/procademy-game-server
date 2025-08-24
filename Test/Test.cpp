@@ -186,10 +186,18 @@ void __rdtscTest() {
 void fflushTest() {
     FILE* pFile = nullptr;
     fopen_s(&pFile, "TEST.txt", "wb");
+    if (pFile == nullptr) {
+        return;
+    }
 
-    char* pbuffer = (char*)malloc(4096 * 2);
-    memset(pbuffer, 0xaa, 4096 * 2);
-    int iret = fwrite(pbuffer, 1, 512, pFile);
+    char* pBuffer = (char*)malloc(4096 * 2);
+    if (pBuffer == nullptr) {
+        fclose(pFile);
+        return;
+    }
+
+    memset(pBuffer, 0xaa, 4096 * 2);
+    int iret = fwrite(pBuffer, 1, 512, pFile);
     cout << iret << " bytes write" << endl;
     fflush(pFile);
 
@@ -201,13 +209,21 @@ void fflushTest() {
 void fseekTest() {
     FILE* pFile = nullptr;
     fopen_s(&pFile, "TEST.txt", "wb");
+    if (pFile == nullptr) {
+        return;
+    }
 
     fseek(pFile, 0, SEEK_END);
     int sizeFile = ftell(pFile);
-    char* pbuff = (char*)malloc(sizeFile);
+
+    char* pBuffer = (char*)malloc(sizeFile);
+    if (pBuffer == nullptr) {
+        fclose(pFile);
+        return;
+    }
 
     fseek(pFile, 0, SEEK_SET);
-    fread(pbuff, 1, sizeFile, pFile);
+    fread(pBuffer, 1, sizeFile, pFile);
     rewind(pFile);
 
     Sleep(100000);
