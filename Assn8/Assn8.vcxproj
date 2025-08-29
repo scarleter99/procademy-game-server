@@ -127,6 +127,9 @@
   <ItemGroup>
     <ClCompile Include="Assn8.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="TEST.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

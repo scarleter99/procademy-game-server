@@ -231,9 +231,41 @@ void fseekTest() {
     fclose(pFile);
 }
 
+void timeBeginPeriodTest() {
+    timeBeginPeriod(1); // 해상도를 1ms로 낮춘다.
+
+    DWORD fpsTick = timeGetTime();
+    unsigned long fpsCount = 0;
+
+    DWORD startTick = timeGetTime();
+    DWORD endTick = 0;
+    while (1) {
+        Sleep(10); // 로직
+        endTick = timeGetTime();
+        // 프레임제어 대기 코드
+        long useTick = (long)(endTick - startTick);
+
+        if (20 - useTick > 0) {
+            Sleep(20 - useTick);
+        }
+        startTick += 20;
+
+        {
+            fpsCount++;
+            if (timeGetTime() - fpsTick >= 1000) {
+                cout << "FPS: " << fpsCount << endl;
+                fpsCount = 0;
+                fpsTick = timeGetTime();
+            }
+        }
+    }
+
+    timeBeginPeriod(1);
+}
+
 int main()
 {
-    fseekTest();
+    timeBeginPeriodTest();
 
     return 0;
 }

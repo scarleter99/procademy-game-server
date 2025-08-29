@@ -1,39 +1,17 @@
-﻿#include <stdio.h>
+﻿#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <cstdint>
+#include <cstring> 
+#include <stdio.h>
 #include <memory.h>
 #include <Windows.h>
+#include <conio.h>
 #include "Console.h"
+#include "GameScene.h"
 
-#define ENEMY_MAX		30
-#define SHOT_MAX		50
-
-struct PLAYER {
-	int hp;
-	
-	int x;
-	int y;
-};
-
-struct ENEMY {
-	bool visible;
-	int hp;
-	
-	int x;
-	int y;
-};
-
-struct SHOT {
-	bool visible;
-	bool isEnemy;
-
-	int x;
-	int y;
-};
-
-enum Scene {
-	GAME,
-	TITLE,
-	FINISH,
-};
+using namespace std;
 
 //--------------------------------------------------------------------
 // 화면 깜빡임을 없애기 위한 화면 버퍼.
@@ -60,10 +38,7 @@ enum Scene {
 // 매 줄 출력마다 좌표를 강제로 이동하여 확실하게 출력한다.
 //--------------------------------------------------------------------
 char szScreenBuffer[dfSCREEN_HEIGHT][dfSCREEN_WIDTH];
-PLAYER g_stPlayer;
-ENEMY g_stEnemy[ENEMY_MAX];
-ENEMY g_stShot[SHOT_MAX];
-
+Scene g_currentScene;
 
 //--------------------------------------------------------------------
 // GetAsyncKeyState(int iKey)  #include <Windows.h>
@@ -114,20 +89,15 @@ void Buffer_Clear();
 //--------------------------------------------------------------------
 void Sprite_Draw(int iX, int iY, char chSprite);
 
-void StartScene(Scene scene);
-
 void KeyProcess();
 
-void DrawPlayer();
+bool LoadData();
 
-void DrawEnemy();
+void UpdateTitle();
 
-void CreateShot(int x, int y, bool isEnemy);
+void UpdateGame();
 
-void ShotProcess();
-
-void EnemyAI();
-
+void UpdateFinish();
 
 void main(void)
 {
@@ -137,31 +107,38 @@ void main(void)
 	// 게임의 메인 루프
 	// 이 루프가  1번 돌면 1프레임 이다.
 	//--------------------------------------------------------------------
+	
+	timeBeginPeriod(1); // 해상도를 1ms로 낮춘다.
+
+	DWORD startTick = timeGetTime();
+	DWORD endTick = 0;
 	while (1)
 	{
-		// 하단은 게임씬의 로직 예시이며 
-		// 이 부분에는 씬 표현을 위한 분기가 들어가시면 됩니다.
-		// 
-		// 
-		// GameUpdate() 내부 예시
-		// 
-		// 1. 키보드 입력부
-		// 2. 로직부 
-		// 3. 랜더부
-			/*  예시
-				// 스크린 버퍼를 지움
-				Buffer_Clear();
-				// 스크린 버퍼에 객체들 출력
-				Sprite_Draw(iX, 10, 'A');
-				// 스크린 버퍼를 화면으로 출력
-				Buffer_Flip();
-			*/
+		KeyProcess();
+		Buffer_Clear();
+		switch (g_currentScene) {
+			case TITLE:
+				UpdateTitle();
+				break;
+			case GAME:
+				UpdateGame();
+				break;
+			case FINISH:
+				UpdateFinish();
+				break;
+		}
 
-			// 프레임 맞추기용 대기 Sleep(X)
+		Buffer_Flip();
+
+		endTick = timeGetTime();
+		long useTick = (long)(endTick - startTick);
+		if (20 - useTick > 0) {
+			Sleep(20 - useTick);
+		}
+
+		startTick += 20;
 	}
 }
-
-
 
 //--------------------------------------------------------------------
 // 버퍼의 내용을 화면으로 찍어주는 함수.
@@ -211,6 +188,51 @@ void Sprite_Draw(int iX, int iY, char chSprite)
 	szScreenBuffer[iY][iX] = chSprite;
 }
 
+void KeyProcess()
+{
+	if (GetAsyncKeyState(VK_LEFT)) {
+		
+	}
+
+}
+
+bool LoadData()
+{
+	ifstream fin("", ios::binary);
+	if (!fin) {
+		cout << "No File" << endl;
+		return false;
+	}
+
+	vector<unsigned char> buf(
+		(istreambuf_iterator<char>(fin)),
+		istreambuf_iterator<char>()
+	);
+
+	fin.close();
+	return true;
+}
+
+void UpdateGame() 
+{
+	if (g_loadStageFlag) {
+		LoadData();
+	}
+
+	MovePlayer();
+	MoveEnemy();
+	MoveShot();
+
+	Sprite_Draw(g_stPlayer.x, g_stPlayer.y, '#');
+
+	for (ENEMY enemy : g_stEnemy) {
+		Sprite_Draw(enemy.x, enemy.y, '@');
+	}
+
+	for (SHOT shot : g_stShot) {
+		Sprite_Draw(shot.x, shot.y, '!');
+	}
+}
 
 
 

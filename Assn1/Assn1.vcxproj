@@ -128,6 +128,9 @@
   <ItemGroup>
     <ClCompile Include="Assn1.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="doc\bit 연산자 과제.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
