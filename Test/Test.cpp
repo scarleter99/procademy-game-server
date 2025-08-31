@@ -259,8 +259,6 @@ void timeBeginPeriodTest() {
             }
         }
     }
-
-    timeBeginPeriod(1);
 }
 
 int main()

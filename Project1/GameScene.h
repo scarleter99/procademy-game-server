@@ -12,6 +12,8 @@
 #include <cstring> 
 
 #include "Console.h"
+#include "InputManager.h"
+#include "ScreenManager.h"
 
 using namespace std;
 
@@ -19,41 +21,46 @@ using namespace std;
 #define SHOT_MAX		50
 
 struct PLAYER {
+	bool visible = false;
+	char Shape;
 	int hp;
-
+	int speed;
+	int moveCounter;
+	
 	int x;
 	int y;
 };
 
 struct ENEMY {
-	bool visible;
+	bool visible = false;
 	int hp;
+	int speed;
+	int pattern[10][2];
 
 	int x;
 	int y;
 };
 
 struct SHOT {
-	bool visible;
+	bool visible = false;
 	bool isEnemy;
 
 	int x;
 	int y;
 };
 
-enum Scene {
-	TITLE,
-	GAME,
-	FINISH,
-};
+extern int g_currentStage;
+extern int g_enemyCnt;
+extern bool g_loadStageFlag;
+extern PLAYER g_stPlayer;
+extern ENEMY g_stEnemy[ENEMY_MAX];
+extern SHOT g_stShot[SHOT_MAX];
 
-int g_stage = 1;
-bool g_loadStageFlag;
-PLAYER g_stPlayer;
-ENEMY g_stEnemy[ENEMY_MAX];
-SHOT g_stShot[SHOT_MAX];
+void StartStage();
 
-void StartGameScene();
+void StageClear();
+
+void GameOver();
 
 void MovePlayer();
 
