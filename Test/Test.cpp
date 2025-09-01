@@ -234,6 +234,7 @@ void fseekTest() {
 void timeBeginPeriodTest() {
     timeBeginPeriod(1); // 해상도를 1ms로 낮춘다.
 
+    // fps 확인용 값 
     DWORD fpsTick = timeGetTime();
     unsigned long fpsCount = 0;
 
@@ -244,12 +245,13 @@ void timeBeginPeriodTest() {
         endTick = timeGetTime();
         // 프레임제어 대기 코드
         long useTick = (long)(endTick - startTick);
-
+        startTick += 20;
         if (20 - useTick > 0) {
             Sleep(20 - useTick);
+            // Render();
         }
-        startTick += 20;
-
+        
+        // fps 확인 코드
         {
             fpsCount++;
             if (timeGetTime() - fpsTick >= 1000) {

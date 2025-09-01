@@ -82,15 +82,13 @@ int main()
 				break;
 		}
 
-		Buffer_Flip();
-
 		endTick = timeGetTime();
 		long useTick = (long)(endTick - startTick);
+		startTick += 20;
 		if (20 - useTick > 0) {
 			Sleep(20 - useTick);
+			Buffer_Flip();
 		}
-
-		startTick += 20;
 	}
 
 	return 0;
@@ -115,12 +113,12 @@ bool LoadData()
 
 void UpdateTitle()
 {
-	char shootStr[] = "SHOOT";
+	char shootStr[] = "SHOOT!";
 	for (int i = 0; i < strlen(shootStr); i++) {
 		Sprite_Draw(38 + i, 8, shootStr[i]);
 	}
 
-	char pressSpaceBarStr[] = "Press [Space] to Start!";
+	char pressSpaceBarStr[] = "Press [Space] To Start";
 	for (int i = 0; i < strlen(pressSpaceBarStr); i++) {
 		Sprite_Draw(30 + i,12, pressSpaceBarStr[i]);
 	}
@@ -154,14 +152,14 @@ void UpdateGame()
 	}
 
 	if (g_stPlayer.visible) {
-		Sprite_Draw(g_stPlayer.x, g_stPlayer.y, '#');
+		Sprite_Draw(g_stPlayer.x, g_stPlayer.y, g_stPlayer.shape);
 	}
 	
 	for (const ENEMY& enemy : g_stEnemy) {
 		if (enemy.visible == false) {
 			continue;
 		}
-		Sprite_Draw(enemy.x, enemy.y, '@');
+		Sprite_Draw(enemy.x, enemy.y, enemy.shape);
 	}
 
 	for (const SHOT& shot : g_stShot) {
@@ -169,10 +167,32 @@ void UpdateGame()
 			continue;
 		}
 
-		Sprite_Draw(shot.x, shot.y, '!');
+		Sprite_Draw(shot.x, shot.y, shot.shape);
 	}
 }
 
 void UpdateFinish()
 {
+	if (g_isClear) {
+		char finishStr[] = "Game Clear!";
+		for (int i = 0; i < strlen(finishStr); i++) {
+			Sprite_Draw(35 + i, 8, finishStr[i]);
+		}
+	}
+	else {
+		char finishStr[] = "Game Over!";
+		for (int i = 0; i < strlen(finishStr); i++) {
+			Sprite_Draw(35 + i, 8, finishStr[i]);
+		}
+	}
+	
+
+	char pressSpaceBarStr[] = "Press [Space] To Back To Title";
+	for (int i = 0; i < strlen(pressSpaceBarStr); i++) {
+		Sprite_Draw(26 + i, 12, pressSpaceBarStr[i]);
+	}
+
+	if (g_spaceKeyDown) {
+		g_currentScene = TITLE;
+	}
 }

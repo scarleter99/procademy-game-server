@@ -22,7 +22,7 @@ using namespace std;
 
 struct PLAYER {
 	bool visible = false;
-	char Shape;
+	char shape;
 	int hp;
 	int speed;
 	int moveCounter;
@@ -33,8 +33,10 @@ struct PLAYER {
 
 struct ENEMY {
 	bool visible = false;
+	char shape;
 	int hp;
 	int speed;
+	int moveCounter;
 	int pattern[10][2];
 
 	int x;
@@ -43,22 +45,27 @@ struct ENEMY {
 
 struct SHOT {
 	bool visible = false;
+	char shape;
 	bool isEnemy;
 
 	int x;
 	int y;
 };
 
+extern int g_maxStage;
 extern int g_currentStage;
 extern int g_enemyCnt;
 extern bool g_loadStageFlag;
 extern PLAYER g_stPlayer;
 extern ENEMY g_stEnemy[ENEMY_MAX];
 extern SHOT g_stShot[SHOT_MAX];
+extern bool g_isClear;
 
 void StartStage();
 
 void StageClear();
+
+void GameClear();
 
 void GameOver();
 
@@ -68,4 +75,4 @@ void MoveEnemy();
 
 void MoveShot();
 
-void CreateShot(int x, int y, bool isEnemy);
+void CreateShot(int x, int y, bool isEnemy, char shape);

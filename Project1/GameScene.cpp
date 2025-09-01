@@ -1,45 +1,64 @@
 #include "GameScene.h"
 
+int g_maxStage = 2;
 int g_currentStage = 1;
 int g_enemyCnt;
 bool g_loadStageFlag;
 PLAYER g_stPlayer;
 ENEMY g_stEnemy[ENEMY_MAX];
 SHOT g_stShot[SHOT_MAX];
+bool g_isClear;
 
 void StartStage()
 {
 	g_stPlayer.visible = true;
+	g_stPlayer.shape = '#';
 	g_stPlayer.hp = 3;
 	g_stPlayer.speed = 2;
 	g_stPlayer.x = 40;
 	g_stPlayer.y = 20;
 
 	g_stEnemy[0].visible = true;
+	g_stEnemy[0].shape = '@';
 	g_stEnemy[0].hp = 1;
-	g_stPlayer.speed = 3;
+	g_stEnemy[0].speed = 3;
 	g_stEnemy[0].x = 30;
 	g_stEnemy[0].y = 5;
 
 	g_stEnemy[1].visible = true;
-	g_stEnemy[1].hp = 2;
-	g_stPlayer.speed = 3;
+	g_stEnemy[1].shape = '@';
+	g_stEnemy[1].hp = 1;
+	g_stEnemy[1].speed = 3;
 	g_stEnemy[1].x = 40;
 	g_stEnemy[1].y = 5;
 
 	g_stEnemy[2].visible = true;
+	g_stEnemy[2].shape = '@';
 	g_stEnemy[2].hp = 1;
-	g_stPlayer.speed = 3;
+	g_stEnemy[2].speed = 3;
 	g_stEnemy[2].x = 50;
 	g_stEnemy[2].y = 5;
 
 	g_enemyCnt = 3;
+	g_isClear = false;
 }
 
 void StageClear()
 {
 	g_currentStage++;
+	if (g_currentStage > g_maxStage) {
+		GameClear();
+		return;
+	}
+
 	StartStage();
+}
+
+void GameClear()
+{
+	g_isClear = true;
+	g_stPlayer.visible = false;
+	g_currentScene = FINISH;
 }
 
 void GameOver()
@@ -50,9 +69,13 @@ void GameOver()
 
 void MovePlayer()
 {
+	if (g_spaceKeyDown) {
+		CreateShot(g_stPlayer.x, g_stPlayer.y, false, '!');
+	}
+
 	g_stPlayer.moveCounter++;
 	if (g_stPlayer.moveCounter < g_stPlayer.speed)
-		return; // TODO - 발사는 가능하게 조정
+		return;
 
 	g_stPlayer.moveCounter = 0;
 	if (g_upKey) {
@@ -69,10 +92,6 @@ void MovePlayer()
 
 	if (g_leftKey) {
 		g_stPlayer.x = max(2, g_stPlayer.x - 1);
-	}
-
-	if (g_spaceKeyDown) {
-		CreateShot(g_stPlayer.x, g_stPlayer.y, false);
 	}
 }
 
@@ -134,16 +153,17 @@ void MoveShot()
 	}
 }
 
-void CreateShot(int x, int y, bool isEnemy)
+void CreateShot(int x, int y, bool isEnemy, char shape)
 {
 	for (SHOT& shot : g_stShot) {
 		if (shot.visible) {
 			continue;
 		}
 
+		shot.visible = true;
+		shot.shape = '!';
 		shot.x = x;
 		shot.y = y;
-		shot.visible = true;
 		break;
 	}
 }
