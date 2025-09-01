@@ -22,7 +22,7 @@ using namespace std;
 
 struct PLAYER {
 	bool visible = false;
-	char shape;
+	char symbol;
 	int hp;
 	int speed;
 	int moveCounter;
@@ -33,7 +33,7 @@ struct PLAYER {
 
 struct ENEMY {
 	bool visible = false;
-	char shape;
+	char symbol;
 	int hp;
 	int speed;
 	int moveCounter;
@@ -45,7 +45,7 @@ struct ENEMY {
 
 struct SHOT {
 	bool visible = false;
-	char shape;
+	char symbol;
 	bool isEnemy;
 
 	int x;
@@ -75,4 +75,4 @@ void MoveEnemy();
 
 void MoveShot();
 
-void CreateShot(int x, int y, bool isEnemy, char shape);
+void CreateShot(int x, int y, bool isEnemy, char symbol);

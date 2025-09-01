@@ -126,25 +126,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
-    <ClCompile Include="FinishScene.cpp" />
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ScreenManager.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
-    <ClInclude Include="FinishScene.h" />
+    <ClInclude Include="DataManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenManager.h" />
-    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="EnemyInfo.txt" />
-    <Text Include="Pattern.txt" />
     <Text Include="Stage1.txt" />
+    <Text Include="Stage2.txt" />
+    <Text Include="Stage3.txt" />
     <Text Include="StageInfo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -8,10 +8,11 @@
 #include <memory.h>
 #include <Windows.h>
 #include <conio.h>
+#include "ScreenManager.h"
+#include "InputManager.h"
+#include "DataManager.h"
 #include "Console.h"
 #include "GameScene.h"
-#include "InputManager.h"
-#include "ScreenManager.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -42,8 +43,6 @@ using namespace std;
 // 빠른 커맨드 입력이 필요한 게임에서는 20ms 이내에 여러개의 키입력이 있다면 체크하지 못하는 키 입력이 발생 할 수 있다.
 // 그래서 0x0001 비트에 대한 처리도 필요하다.
 //
-
-bool LoadData();
 
 void UpdateTitle();
 
@@ -94,23 +93,6 @@ int main()
 	return 0;
 }
 
-bool LoadData()
-{
-	ifstream fin("", ios::binary);
-	if (!fin) {
-		cout << "No File" << endl;
-		return false;
-	}
-
-	vector<unsigned char> buf(
-		(istreambuf_iterator<char>(fin)),
-		istreambuf_iterator<char>()
-	);
-
-	fin.close();
-	return true;
-}
-
 void UpdateTitle()
 {
 	char shootStr[] = "SHOOT!";
@@ -133,7 +115,9 @@ void UpdateTitle()
 void UpdateGame() 
 {
 	if (g_loadStageFlag) {
-		LoadData();
+		loadStageInfo("StageInfo.txt");
+		loadStageData();
+		loadEnemyInfo("EnemyInfo.txt");
 	}
 
 	MovePlayer();
@@ -152,14 +136,14 @@ void UpdateGame()
 	}
 
 	if (g_stPlayer.visible) {
-		Sprite_Draw(g_stPlayer.x, g_stPlayer.y, g_stPlayer.shape);
+		Sprite_Draw(g_stPlayer.x, g_stPlayer.y, g_stPlayer.symbol);
 	}
 	
 	for (const ENEMY& enemy : g_stEnemy) {
 		if (enemy.visible == false) {
 			continue;
 		}
-		Sprite_Draw(enemy.x, enemy.y, enemy.shape);
+		Sprite_Draw(enemy.x, enemy.y, enemy.symbol);
 	}
 
 	for (const SHOT& shot : g_stShot) {
@@ -167,7 +151,7 @@ void UpdateGame()
 			continue;
 		}
 
-		Sprite_Draw(shot.x, shot.y, shot.shape);
+		Sprite_Draw(shot.x, shot.y, shot.symbol);
 	}
 }
 

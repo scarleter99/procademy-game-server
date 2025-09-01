@@ -11,6 +11,8 @@
 #include <Windows.h>
 #include <conio.h>
 
+using namespace std;
+
 extern bool g_upKey;
 extern bool g_downKey;
 extern bool g_rightKey;

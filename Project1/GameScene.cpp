@@ -12,28 +12,28 @@ bool g_isClear;
 void StartStage()
 {
 	g_stPlayer.visible = true;
-	g_stPlayer.shape = '#';
+	g_stPlayer.symbol = '#';
 	g_stPlayer.hp = 3;
 	g_stPlayer.speed = 2;
 	g_stPlayer.x = 40;
 	g_stPlayer.y = 20;
 
 	g_stEnemy[0].visible = true;
-	g_stEnemy[0].shape = '@';
+	g_stEnemy[0].symbol = '@';
 	g_stEnemy[0].hp = 1;
 	g_stEnemy[0].speed = 3;
 	g_stEnemy[0].x = 30;
 	g_stEnemy[0].y = 5;
 
 	g_stEnemy[1].visible = true;
-	g_stEnemy[1].shape = '@';
+	g_stEnemy[1].symbol = '@';
 	g_stEnemy[1].hp = 1;
 	g_stEnemy[1].speed = 3;
 	g_stEnemy[1].x = 40;
 	g_stEnemy[1].y = 5;
 
 	g_stEnemy[2].visible = true;
-	g_stEnemy[2].shape = '@';
+	g_stEnemy[2].symbol = '@';
 	g_stEnemy[2].hp = 1;
 	g_stEnemy[2].speed = 3;
 	g_stEnemy[2].x = 50;
@@ -153,7 +153,7 @@ void MoveShot()
 	}
 }
 
-void CreateShot(int x, int y, bool isEnemy, char shape)
+void CreateShot(int x, int y, bool isEnemy, char symbol)
 {
 	for (SHOT& shot : g_stShot) {
 		if (shot.visible) {
@@ -161,7 +161,7 @@ void CreateShot(int x, int y, bool isEnemy, char shape)
 		}
 
 		shot.visible = true;
-		shot.shape = '!';
+		shot.symbol = '!';
 		shot.x = x;
 		shot.y = y;
 		break;

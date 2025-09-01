@@ -14,6 +14,8 @@
 #include "GameScene.h"
 #include "InputManager.h"
 
+using namespace std;
+
 enum Scene {
 	TITLE,
 	GAME,
