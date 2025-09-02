@@ -1,51 +1,75 @@
 #include "DataManager.h"
 
 StageInfo g_stageInfo;
-vector<vector<EnemyData>> g_stageData;
-vector<EnemyInfo> g_enemyInfos;
-vector<Pattern> g_patterns;
+vector<vector<EnemyData>> g_stageDatas;
+unordered_map<int, EnemyInfo> g_enemyInfos;
+unordered_map<int, Pattern>   g_patternInfos;
 
 void loadStageInfo(const string& fileName) {
     ifstream fin(fileName);
     if (!fin) {
-        cerr << "Failed to open StageInfo file: " << fileName << endl;
         return;
     }
 
-    // 스테이지 개수 읽기
-    fin >> g_stageInfo.stageCount;
-
+    g_stageInfo.stageCount = 0;
     g_stageInfo.stageFiles.clear();
-    g_stageInfo.stageFiles.reserve(g_stageInfo.stageCount);
 
-    // 파일 이름들 읽기
-    for (int i = 0; i < g_stageInfo.stageCount; i++) {
+    fin >> g_stageInfo.stageCount;
+    if (!fin) {
+        return;
+    }
+
+    if (g_stageInfo.stageCount < 0) {
+        g_stageInfo.stageCount = 0;
+    }
+    else if (g_stageInfo.stageCount > STAGE_MAX) {
+        g_stageInfo.stageCount = STAGE_MAX;
+    }
+
+    g_stageInfo.stageFiles.resize(g_stageInfo.stageCount + 1);
+    g_stageDatas.clear();
+    g_stageDatas.resize(g_stageInfo.stageCount + 1);
+
+    for (int i = 1; i <= g_stageInfo.stageCount; i++) {
         string stageFile;
         fin >> stageFile;
-        if (!stageFile.empty()) {
-            g_stageInfo.stageFiles.push_back(stageFile);
+        if (!fin) {
+            break;
         }
+
+        g_stageInfo.stageFiles[i] = stageFile;
     }
 }
 
-void loadStageData() {
-    for (int i = 0; i < g_stageInfo.stageCount; i++) {
-        const string& stageFile = g_stageInfo.stageFiles[i];
-        ifstream fin(stageFile);
-        if (!fin) {
-            cerr << "Failed to open StageData file: " << stageFile << endl;
-            continue;
-        }
+void loadStageData(int stage) {
+    if (stage < 1 || stage > g_stageInfo.stageCount) {
+        return;
+    }
 
-        string header;
-        getline(fin, header);
+    if (g_stageDatas[stage].empty() == false) {
+        return;
+    }
 
-        vector<EnemyData>& enemies = g_stageData[i];
-        enemies.clear();
+    const string& stageFileName = g_stageInfo.stageFiles[stage];
+    if (stageFileName.empty()) {
+        return;
+    }
 
-        int id, x, y;
-        while (fin >> id >> x >> y) {
-            enemies.push_back(EnemyData{ id, x, y });
+    ifstream fin(stageFileName);
+    if (!fin) {
+        return;
+    }
+
+    string header;
+    getline(fin, header);
+
+    int id = 0, x = 0, y = 0;
+    int count = 0;
+    while (fin >> id >> x >> y) {
+        g_stageDatas[stage].push_back({ id, x, y });
+        count++;
+        if (count > ENEMY_MAX) {
+            break;
         }
     }
 }
@@ -53,49 +77,73 @@ void loadStageData() {
 void loadEnemyInfo(const string& fileName) {
     ifstream fin(fileName);
     if (!fin) {
-        cerr << "Failed to open " << fileName << endl;
         return;
     }
 
+    g_enemyInfos.clear();
+
+    string header;
+    getline(fin, header);
+
     string line;
-    bool readingHeader = true;
-    Pattern* currentPattern = nullptr;
-
     while (getline(fin, line)) {
-        if (line.empty()) continue;
-
-        if (readingHeader) {
-            // 첫 줄 "ID 모양 HP 속도 패턴" 건너뜀
-            if (line.find("ID") != string::npos) {
-                continue;
-            }
-            // 패턴 시작(#) 만나면 헤더 부분 끝
-            if (line[0] == '#') {
-                readingHeader = false;
-            }
-            else {
-                // EnemyInfo 읽기
-                stringstream ss(line);
-                EnemyInfo e;
-                ss >> e.id >> e.symbol >> e.hp >> e.speed >> e.patternId;
-                g_enemyInfos.push_back(e);
-                continue;
-            }
+        if (line.empty()) {
+            continue;
         }
 
-        // 패턴 부분
-        if (line[0] == '#') {
-            // 새 패턴 시작
-            int pid = stoi(line.substr(1));
-            g_patterns.push_back(Pattern{ pid });
-            currentPattern = &g_patterns.back();
+        stringstream ss(line);
+        EnemyInfo e{};
+        if (ss >> e.id >> e.symbol >> e.hp >> e.speed >> e.patternId) {
+            g_enemyInfos[e.id] = e;
         }
-        else if (currentPattern) {
-            // 방향 데이터
-            stringstream ss(line);
-            int dx, dy;
-            ss >> dx >> dy;
-            currentPattern->moves.push_back({ dx, dy });
+        else {
+            continue;
         }
     }
 }
+
+void loadPatternInfo(const string& fileName) {
+    ifstream fin(fileName);
+    if (!fin) {
+        return;
+    }
+
+    g_patternInfos.clear();
+
+    string idline;
+    while (getline(fin, idline)) {
+        if (idline.empty() || idline[0] != '#') {
+            continue;
+        }
+        int id = stoi(idline.substr(1));
+
+        string countLine;
+        if (!getline(fin, countLine)) {
+            break;
+        }
+        int patternCount = stoi(countLine);
+
+        Pattern p{};
+        p.id = id;
+        p.moveCount = 0;
+
+        for (int i = 0; i < patternCount; i++) {
+            string moveLine;
+            if (!getline(fin, moveLine)) {
+                break;
+            }
+
+            stringstream ss(moveLine);
+            int dx, dy;
+            if (!(ss >> dx >> dy)) {
+                continue;
+            }
+
+            p.moves.push_back({ dx, dy });
+            p.moveCount = p.moves.size();
+        }
+
+        g_patternInfos[id] = move(p);
+    }
+}
+

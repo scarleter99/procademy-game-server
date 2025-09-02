@@ -58,10 +58,12 @@ int main()
 	// 게임의 메인 루프
 	// 이 루프가  1번 돌면 1프레임 이다.
 	//--------------------------------------------------------------------
+	
+	timeBeginPeriod(1);
 
 	g_currentScene = TITLE;
-	
-	timeBeginPeriod(1); // 해상도를 1ms로 낮춘다.
+	loadStageInfo("StageInfo.txt");
+	loadEnemyInfo("EnemyInfo.txt");
 
 	DWORD startTick = timeGetTime();
 	DWORD endTick = 0;
@@ -90,34 +92,34 @@ int main()
 		}
 	}
 
+	timeEndPeriod(1);
+
 	return 0;
 }
 
 void UpdateTitle()
 {
 	char shootStr[] = "SHOOT!";
-	for (int i = 0; i < strlen(shootStr); i++) {
+	for (size_t  i = 0; i < strlen(shootStr); i++) {
 		Sprite_Draw(38 + i, 8, shootStr[i]);
 	}
 
 	char pressSpaceBarStr[] = "Press [Space] To Start";
-	for (int i = 0; i < strlen(pressSpaceBarStr); i++) {
+	for (size_t  i = 0; i < strlen(pressSpaceBarStr); i++) {
 		Sprite_Draw(30 + i,12, pressSpaceBarStr[i]);
 	}
 
 	if (g_spaceKeyDown) {
 		g_currentScene = GAME;
 		g_currentStage = 1;
-		StartStage();
+		g_loadStageFlag = false;
 	}
 }
 
 void UpdateGame() 
 {
-	if (g_loadStageFlag) {
-		loadStageInfo("StageInfo.txt");
-		loadStageData();
-		loadEnemyInfo("EnemyInfo.txt");
+	if (g_loadStageFlag == false) {
+		StartStage();
 	}
 
 	MovePlayer();
@@ -125,13 +127,13 @@ void UpdateGame()
 	MoveShot();
 
 	char stageStr[] = "Stage ";
-	for (int i = 0; i < strlen(stageStr); i++) {
+	for (size_t i = 0; i < strlen(stageStr); i++) {
 		Sprite_Draw(i, 0, stageStr[i]);
 	}
 
 	Sprite_Draw(strlen(stageStr), 0, g_currentStage + '0');
 
-	for (int i = 0; i < dfSCREEN_WIDTH - 1; i++) {
+	for (size_t i = 0; i < dfSCREEN_WIDTH - 1; i++) {
 		Sprite_Draw(i, 1, '-');
 	}
 
@@ -159,20 +161,20 @@ void UpdateFinish()
 {
 	if (g_isClear) {
 		char finishStr[] = "Game Clear!";
-		for (int i = 0; i < strlen(finishStr); i++) {
+		for (size_t i = 0; i < strlen(finishStr); i++) {
 			Sprite_Draw(35 + i, 8, finishStr[i]);
 		}
 	}
 	else {
 		char finishStr[] = "Game Over!";
-		for (int i = 0; i < strlen(finishStr); i++) {
+		for (size_t i = 0; i < strlen(finishStr); i++) {
 			Sprite_Draw(35 + i, 8, finishStr[i]);
 		}
 	}
 	
 
 	char pressSpaceBarStr[] = "Press [Space] To Back To Title";
-	for (int i = 0; i < strlen(pressSpaceBarStr); i++) {
+	for (size_t i = 0; i < strlen(pressSpaceBarStr); i++) {
 		Sprite_Draw(26 + i, 12, pressSpaceBarStr[i]);
 	}
 

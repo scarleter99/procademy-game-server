@@ -177,6 +177,8 @@ void timeGetTimeTest() {
         DWORD dwTick2 = timeGetTime();
         cout << t << " " << dwTick << " " << dwTick2 << endl;
     }
+
+    timeEndPeriod(1);
 }
 
 void __rdtscTest() {
@@ -231,7 +233,7 @@ void fseekTest() {
     fclose(pFile);
 }
 
-void timeBeginPeriodTest() {
+void frameControlTest() {
     timeBeginPeriod(1); // 해상도를 1ms로 낮춘다.
 
     // fps 확인용 값 
@@ -261,11 +263,13 @@ void timeBeginPeriodTest() {
             }
         }
     }
+
+    timeEndPeriod(1);
 }
 
 int main()
 {
-    timeBeginPeriodTest();
+    frameControlTest();
 
     return 0;
 }

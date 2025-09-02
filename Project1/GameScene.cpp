@@ -1,16 +1,17 @@
 #include "GameScene.h"
 
-int g_maxStage = 2;
 int g_currentStage = 1;
-int g_enemyCnt;
-bool g_loadStageFlag;
+int g_enemyCount = 0;
+bool g_loadStageFlag = false;
+bool g_isClear = false;
 PLAYER g_stPlayer;
 ENEMY g_stEnemy[ENEMY_MAX];
 SHOT g_stShot[SHOT_MAX];
-bool g_isClear;
 
 void StartStage()
 {
+	loadStageData(g_currentStage);
+
 	g_stPlayer.visible = true;
 	g_stPlayer.symbol = '#';
 	g_stPlayer.hp = 3;
@@ -18,40 +19,30 @@ void StartStage()
 	g_stPlayer.x = 40;
 	g_stPlayer.y = 20;
 
-	g_stEnemy[0].visible = true;
-	g_stEnemy[0].symbol = '@';
-	g_stEnemy[0].hp = 1;
-	g_stEnemy[0].speed = 3;
-	g_stEnemy[0].x = 30;
-	g_stEnemy[0].y = 5;
+	for (size_t i = 0; i < g_stageDatas[g_currentStage].size(); i++) {
+		int id = g_stageDatas[g_currentStage][i].id;
+		g_stEnemy[i].x = g_stageDatas[g_currentStage][i].x;
+		g_stEnemy[i].y = g_stageDatas[g_currentStage][i].y;
 
-	g_stEnemy[1].visible = true;
-	g_stEnemy[1].symbol = '@';
-	g_stEnemy[1].hp = 1;
-	g_stEnemy[1].speed = 3;
-	g_stEnemy[1].x = 40;
-	g_stEnemy[1].y = 5;
+		g_stEnemy[i].visible = true;
+		g_stEnemy[i].symbol = g_enemyInfos[id].symbol;
+		g_stEnemy[i].hp = g_enemyInfos[id].hp;
+		g_stEnemy[i].speed = g_enemyInfos[id].speed;
+		g_stEnemy[i].patternId = g_enemyInfos[id].patternId;
+	}
 
-	g_stEnemy[2].visible = true;
-	g_stEnemy[2].symbol = '@';
-	g_stEnemy[2].hp = 1;
-	g_stEnemy[2].speed = 3;
-	g_stEnemy[2].x = 50;
-	g_stEnemy[2].y = 5;
-
-	g_enemyCnt = 3;
-	g_isClear = false;
+	g_enemyCount = g_stageDatas[g_currentStage].size();
+	g_loadStageFlag = true;
 }
 
 void StageClear()
 {
 	g_currentStage++;
-	if (g_currentStage > g_maxStage) {
+	g_loadStageFlag = false;
+	if (g_currentStage > g_stageInfo.stageCount) {
 		GameClear();
 		return;
 	}
-
-	StartStage();
 }
 
 void GameClear()
@@ -63,6 +54,7 @@ void GameClear()
 
 void GameOver()
 {
+	g_isClear = false;
 	g_stPlayer.visible = false;
 	g_currentScene = FINISH;
 }
@@ -73,11 +65,11 @@ void MovePlayer()
 		CreateShot(g_stPlayer.x, g_stPlayer.y, false, '!');
 	}
 
-	g_stPlayer.moveCounter++;
-	if (g_stPlayer.moveCounter < g_stPlayer.speed)
+	g_stPlayer.moveCount++;
+	if (g_stPlayer.moveCount < g_stPlayer.speed)
 		return;
 
-	g_stPlayer.moveCounter = 0;
+	g_stPlayer.moveCount = 0;
 	if (g_upKey) {
 		g_stPlayer.y = max(2, g_stPlayer.y - 1);
 	}
@@ -138,8 +130,8 @@ void MoveShot()
 					enemy.hp--;
 					if (enemy.hp <= 0) {
 						enemy.visible = false;
-						g_enemyCnt--;
-						if (g_enemyCnt == 0) {
+						g_enemyCount--;
+						if (g_enemyCount == 0) {
 							StageClear();
 							break;
 						}

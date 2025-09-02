@@ -14,52 +14,53 @@
 #include "Console.h"
 #include "InputManager.h"
 #include "ScreenManager.h"
+#include "DataManager.h"
 
 using namespace std;
 
 #define ENEMY_MAX		30
 #define SHOT_MAX		50
 
+
 struct PLAYER {
 	bool visible = false;
-	char symbol;
-	int hp;
-	int speed;
-	int moveCounter;
+	char symbol = '?';
+	int hp = 0;
+	int speed = 0;
+	int moveCount = 0;
 	
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 };
 
 struct ENEMY {
 	bool visible = false;
-	char symbol;
-	int hp;
-	int speed;
-	int moveCounter;
-	int pattern[10][2];
+	char symbol = '?';
+	int hp = 0;
+	int speed = 0;
+	int moveCount = 0;
+	int patternId = 0;
 
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 };
 
 struct SHOT {
 	bool visible = false;
-	char symbol;
-	bool isEnemy;
+	char symbol = 0;
+	bool isEnemy = 0;
 
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 };
 
-extern int g_maxStage;
 extern int g_currentStage;
-extern int g_enemyCnt;
+extern int g_enemyCount;
 extern bool g_loadStageFlag;
+extern bool g_isClear;
 extern PLAYER g_stPlayer;
 extern ENEMY g_stEnemy[ENEMY_MAX];
 extern SHOT g_stShot[SHOT_MAX];
-extern bool g_isClear;
 
 void StartStage();
 

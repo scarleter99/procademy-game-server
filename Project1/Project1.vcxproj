@@ -137,11 +137,11 @@
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="EnemyInfo.txt" />
+    <Text Include="PatternInfo.txt" />
     <Text Include="Stage1.txt" />
     <Text Include="Stage2.txt" />
     <Text Include="Stage3.txt" />
