@@ -67,6 +67,8 @@
     <Text Include="Stage3.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="PatternInfo.txt" />
+    <Text Include="PatternInfo.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>
