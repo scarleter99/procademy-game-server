@@ -64,6 +64,7 @@ int main()
 	g_currentScene = TITLE;
 	loadStageInfo("StageInfo.txt");
 	loadEnemyInfo("EnemyInfo.txt");
+	loadPatternInfo("PatternInfo.txt");
 
 	DWORD startTick = timeGetTime();
 	DWORD endTick = 0;
@@ -124,6 +125,7 @@ void UpdateGame()
 
 	MovePlayer();
 	MoveEnemy();
+	ShotEnemy();
 	MoveShot();
 
 	char stageStr[] = "Stage ";

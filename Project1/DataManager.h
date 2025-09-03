@@ -33,7 +33,7 @@ struct EnemyInfo {
 
 struct Pattern {
     int id;
-    int moveCount;
+    int patternCount;
     vector<pair<int, int>> moves;
 };
 

@@ -125,7 +125,7 @@ void loadPatternInfo(const string& fileName) {
 
         Pattern p{};
         p.id = id;
-        p.moveCount = 0;
+        p.patternCount = 0;
 
         for (int i = 0; i < patternCount; i++) {
             string moveLine;
@@ -140,7 +140,7 @@ void loadPatternInfo(const string& fileName) {
             }
 
             p.moves.push_back({ dx, dy });
-            p.moveCount = p.moves.size();
+            p.patternCount = p.moves.size();
         }
 
         g_patternInfos[id] = move(p);

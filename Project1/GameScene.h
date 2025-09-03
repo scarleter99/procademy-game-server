@@ -20,6 +20,7 @@ using namespace std;
 
 #define ENEMY_MAX		30
 #define SHOT_MAX		50
+#define SHOT_COUNT		100
 
 
 struct PLAYER {
@@ -27,7 +28,7 @@ struct PLAYER {
 	char symbol = '?';
 	int hp = 0;
 	int speed = 0;
-	int moveCount = 0;
+	int speedCount = 0;
 	
 	int x = 0;
 	int y = 0;
@@ -37,9 +38,11 @@ struct ENEMY {
 	bool visible = false;
 	char symbol = '?';
 	int hp = 0;
+	int shotCount = 0;
 	int speed = 0;
-	int moveCount = 0;
+	int speedCount = 0;
 	int patternId = 0;
+	int patternCount = 0;
 
 	int x = 0;
 	int y = 0;
@@ -73,6 +76,8 @@ void GameOver();
 void MovePlayer();
 
 void MoveEnemy();
+
+void ShotEnemy();
 
 void MoveShot();
 

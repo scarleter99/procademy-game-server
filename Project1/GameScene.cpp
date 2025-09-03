@@ -26,8 +26,10 @@ void StartStage()
 
 		g_stEnemy[i].visible = true;
 		g_stEnemy[i].symbol = g_enemyInfos[id].symbol;
+		g_stEnemy[i].shotCount = rand() % SHOT_COUNT;
 		g_stEnemy[i].hp = g_enemyInfos[id].hp;
 		g_stEnemy[i].speed = g_enemyInfos[id].speed;
+		g_stEnemy[i].speedCount = rand() % g_enemyInfos[id].speed;
 		g_stEnemy[i].patternId = g_enemyInfos[id].patternId;
 	}
 
@@ -65,11 +67,12 @@ void MovePlayer()
 		CreateShot(g_stPlayer.x, g_stPlayer.y, false, '!');
 	}
 
-	g_stPlayer.moveCount++;
-	if (g_stPlayer.moveCount < g_stPlayer.speed)
+	if (g_stPlayer.speedCount < g_stPlayer.speed) {
+		g_stPlayer.speedCount++;
 		return;
+	}
+	g_stPlayer.speedCount = 0;
 
-	g_stPlayer.moveCount = 0;
 	if (g_upKey) {
 		g_stPlayer.y = max(2, g_stPlayer.y - 1);
 	}
@@ -83,13 +86,49 @@ void MovePlayer()
 	}
 
 	if (g_leftKey) {
-		g_stPlayer.x = max(2, g_stPlayer.x - 1);
+		g_stPlayer.x = max(0, g_stPlayer.x - 1);
 	}
 }
 
 void MoveEnemy()
 {
+	for (ENEMY& enemy : g_stEnemy) {
+		if (enemy.visible == false) {
+			continue;
+		}
 
+		if (enemy.speedCount < enemy.speed) {
+			enemy.speedCount++;
+			continue;
+		}
+		enemy.speedCount = 0;
+
+		pair<int, int> pattern = g_patternInfos[enemy.patternId].moves[enemy.patternCount];
+		enemy.patternCount = enemy.patternCount + 1 < g_patternInfos[enemy.patternId].patternCount
+			? enemy.patternCount + 1 : 0;
+
+		int ny = min(dfSCREEN_HEIGHT - 1, enemy.y + pattern.second);
+		enemy.y = max(2, ny);
+		int nx = min(dfSCREEN_WIDTH - 2, enemy.x + pattern.first);
+		enemy.x = max(0, nx);
+	}
+}
+
+void ShotEnemy()
+{
+	for (ENEMY& enemy : g_stEnemy) {
+		if (enemy.visible == false) {
+			continue;
+		}
+
+		if (enemy.shotCount < SHOT_COUNT) {
+			enemy.shotCount++;
+			continue;
+		}
+		enemy.shotCount = 0;
+
+		CreateShot(enemy.x, enemy.y, true, '!');
+	}
 }
 
 void MoveShot()
@@ -154,6 +193,7 @@ void CreateShot(int x, int y, bool isEnemy, char symbol)
 
 		shot.visible = true;
 		shot.symbol = '!';
+		shot.isEnemy = isEnemy;
 		shot.x = x;
 		shot.y = y;
 		break;
