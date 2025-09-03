@@ -69,9 +69,7 @@ void StartStage();
 
 void StageClear();
 
-void GameClear();
-
-void GameOver();
+void GameFinish(bool isClear);
 
 void MovePlayer();
 

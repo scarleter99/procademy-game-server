@@ -6,6 +6,8 @@ bool g_rightKey = false;
 bool g_leftKey = false;
 bool g_spaceKey = false;
 bool g_spaceKeyDown = false;
+bool g_zKey = false;
+bool g_zKeyDown = false;
 
 void KeyProcess()
 {
@@ -14,6 +16,7 @@ void KeyProcess()
 	g_rightKey = false;
 	g_leftKey = false;
 	g_spaceKeyDown = false;
+	g_zKeyDown = false;
 
 	if (GetAsyncKeyState(VK_UP)) {
 		g_upKey = true;
@@ -40,5 +43,16 @@ void KeyProcess()
 	}
 	else {
 		g_spaceKey = false;
+	}
+
+	if (GetAsyncKeyState('Z')) {
+		if (g_zKey == false) {
+			g_zKeyDown = true;
+		}
+
+		g_zKey = true;
+	}
+	else {
+		g_zKey = false;
 	}
 }

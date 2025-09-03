@@ -42,28 +42,38 @@ void StageClear()
 	g_currentStage++;
 	g_loadStageFlag = false;
 	if (g_currentStage > g_stageInfo.stageCount) {
-		GameClear();
+		GameFinish(true);
 		return;
+	}
+
+	g_stPlayer.visible = false;
+	for (ENEMY& enemy : g_stEnemy) {
+		enemy.visible = false;
+	}
+
+	for (SHOT& shot : g_stShot) {
+		shot.visible = false;
 	}
 }
 
-void GameClear()
+void GameFinish(bool isClear)
 {
-	g_isClear = true;
-	g_stPlayer.visible = false;
+	g_isClear = isClear;
 	g_currentScene = FINISH;
-}
 
-void GameOver()
-{
-	g_isClear = false;
 	g_stPlayer.visible = false;
-	g_currentScene = FINISH;
+	for (ENEMY& enemy : g_stEnemy) {
+		enemy.visible = false;
+	}
+
+	for (SHOT& shot : g_stShot) {
+		shot.visible = false;
+	}
 }
 
 void MovePlayer()
 {
-	if (g_spaceKeyDown) {
+	if (g_zKeyDown) {
 		CreateShot(g_stPlayer.x, g_stPlayer.y, false, '!');
 	}
 
@@ -147,9 +157,9 @@ void MoveShot()
 
 			if (g_stPlayer.visible && shot.x == g_stPlayer.x && shot.y == g_stPlayer.y) {
 				shot.visible = false;
-				g_stPlayer.hp--;
+				//g_stPlayer.hp--;
 				if (g_stPlayer.hp <= 0) {
-					GameOver();
+					GameFinish(false);
 					break;
 				}
 
@@ -170,7 +180,7 @@ void MoveShot()
 					if (enemy.hp <= 0) {
 						enemy.visible = false;
 						g_enemyCount--;
-						if (g_enemyCount == 0) {
+						if (g_enemyCount <= 0) {
 							StageClear();
 							break;
 						}

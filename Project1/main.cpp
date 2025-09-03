@@ -110,6 +110,11 @@ void UpdateTitle()
 		Sprite_Draw(30 + i,12, pressSpaceBarStr[i]);
 	}
 
+	char fireGuideStr[] = "[Z]: Fire";
+	for (size_t i = 0; i < strlen(fireGuideStr); i++) {
+		Sprite_Draw(30 + i, 14, fireGuideStr[i]);
+	}
+
 	if (g_spaceKeyDown) {
 		g_currentScene = GAME;
 		g_currentStage = 1;

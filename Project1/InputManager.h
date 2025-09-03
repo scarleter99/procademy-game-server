@@ -19,5 +19,7 @@ extern bool g_rightKey;
 extern bool g_leftKey;
 extern bool g_spaceKey;
 extern bool g_spaceKeyDown;
+extern bool g_zKey;
+extern bool g_zKeyDown;
 
 void KeyProcess();
