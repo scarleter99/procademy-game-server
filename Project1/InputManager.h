@@ -21,5 +21,6 @@ extern bool g_spaceKey;
 extern bool g_spaceKeyDown;
 extern bool g_zKey;
 extern bool g_zKeyDown;
+extern bool g_qKey;
 
 void KeyProcess();

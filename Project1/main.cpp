@@ -71,6 +71,11 @@ int main()
 	while (1)
 	{
 		KeyProcess();
+
+		if (g_qKey) { 
+			break;
+		}
+
 		Buffer_Clear();
 		switch (g_currentScene) {
 			case TITLE:
@@ -112,7 +117,12 @@ void UpdateTitle()
 
 	char fireGuideStr[] = "[Z]: Fire";
 	for (size_t i = 0; i < strlen(fireGuideStr); i++) {
-		Sprite_Draw(30 + i, 14, fireGuideStr[i]);
+		Sprite_Draw(30 + i, 15, fireGuideStr[i]);
+	}
+
+	char quitGuideStr[] = "[Q]: Quit Game";
+	for (size_t i = 0; i < strlen(quitGuideStr); i++) {
+		Sprite_Draw(30 + i, 17, quitGuideStr[i]);
 	}
 
 	if (g_spaceKeyDown) {
