@@ -26,11 +26,12 @@ void StartStage()
 
 		g_stEnemy[i].visible = true;
 		g_stEnemy[i].symbol = g_enemyInfos[id].symbol;
-		g_stEnemy[i].shotCount = rand() % SHOT_COUNT;
 		g_stEnemy[i].hp = g_enemyInfos[id].hp;
+		g_stEnemy[i].shotCount = rand() % SHOT_COUNT;
 		g_stEnemy[i].speed = g_enemyInfos[id].speed;
 		g_stEnemy[i].speedCount = rand() % g_enemyInfos[id].speed;
 		g_stEnemy[i].patternId = g_enemyInfos[id].patternId;
+		g_stEnemy[i].patternCount = 0;
 	}
 
 	g_enemyCount = g_stageDatas[g_currentStage].size();
