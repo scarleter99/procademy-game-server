@@ -52,22 +52,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Stage1.txt">
+    <Text Include="Data\EnemyInfo.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="StageInfo.txt">
+    <Text Include="Data\PatternInfo.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="EnemyInfo.txt">
+    <Text Include="Data\Stage1.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="Stage2.txt">
+    <Text Include="Data\Stage2.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="Stage3.txt">
+    <Text Include="Data\Stage3.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="PatternInfo.txt">
+    <Text Include="Data\StageInfo.txt">
       <Filter>리소스 파일</Filter>
     </Text>
   </ItemGroup>

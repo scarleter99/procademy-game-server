@@ -62,9 +62,9 @@ int main()
 	timeBeginPeriod(1);
 
 	g_currentScene = TITLE;
-	loadStageInfo("StageInfo.txt");
-	loadEnemyInfo("EnemyInfo.txt");
-	loadPatternInfo("PatternInfo.txt");
+	loadStageInfo("Data/StageInfo.txt");
+	loadEnemyInfo("Data/EnemyInfo.txt");
+	loadPatternInfo("Data/PatternInfo.txt");
 
 	DWORD startTick = timeGetTime();
 	DWORD endTick = 0;

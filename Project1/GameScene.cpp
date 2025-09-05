@@ -158,7 +158,7 @@ void MoveShot()
 
 			if (g_stPlayer.visible && shot.x == g_stPlayer.x && shot.y == g_stPlayer.y) {
 				shot.visible = false;
-				//g_stPlayer.hp--;
+				g_stPlayer.hp--;
 				if (g_stPlayer.hp <= 0) {
 					GameFinish(false);
 					break;

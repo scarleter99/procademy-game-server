@@ -50,7 +50,7 @@ void loadStageData(int stage) {
         return;
     }
 
-    const string& stageFileName = g_stageInfo.stageFiles[stage];
+    const string& stageFileName = "Data/" + g_stageInfo.stageFiles[stage];
     if (stageFileName.empty()) {
         return;
     }

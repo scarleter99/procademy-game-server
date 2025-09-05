@@ -140,12 +140,12 @@
     <ClInclude Include="ScreenManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="EnemyInfo.txt" />
-    <Text Include="PatternInfo.txt" />
-    <Text Include="Stage1.txt" />
-    <Text Include="Stage2.txt" />
-    <Text Include="Stage3.txt" />
-    <Text Include="StageInfo.txt" />
+    <Text Include="Data\EnemyInfo.txt" />
+    <Text Include="Data\PatternInfo.txt" />
+    <Text Include="Data\Stage1.txt" />
+    <Text Include="Data\Stage2.txt" />
+    <Text Include="Data\Stage3.txt" />
+    <Text Include="Data\StageInfo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
