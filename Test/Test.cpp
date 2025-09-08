@@ -181,10 +181,6 @@ void timeGetTimeTest() {
     timeEndPeriod(1);
 }
 
-void __rdtscTest() {
-    __int64 start = __rdtsc();
-}
-
 void fflushTest() {
     FILE* pFile = nullptr;
     fopen_s(&pFile, "TEST.txt", "wb");
@@ -250,7 +246,7 @@ void frameControlTest() {
         startTick += 20;
         if (20 - useTick > 0) {
             Sleep(20 - useTick);
-            // Render();
+            //Render();
         }
         
         // fps 확인 코드
@@ -267,9 +263,42 @@ void frameControlTest() {
     timeEndPeriod(1);
 }
 
+void DeleteTest() {
+    int* p1 = new int;
+    int* p2 = new int[10];
+
+    delete[] p1; // 소멸자가 있을 때만 문제가 발생한다.
+    delete p2;
+}
+
+class CPlyaer {
+public:
+    // getter/setter 존재 시 캡슐화를 유지할 수 없다. 특히 set
+    // getter/setter가 필요하면 해당 변수의 위치가 잘못된 것이다.
+    // 판단/설정 로직을 가진 멤버함수를 생성해야 캡슐화를 유지할 수 있다.
+    int GetHp() {
+        return _hp;
+    }
+
+    int SetHp(int hp) {
+        _hp = hp;
+    }
+
+private:
+    int _hp;
+};
+
+void Test() {
+    CPlyaer player;
+
+    int hp = player.GetHp();
+    hp -= 100;
+    player.SetHp(hp);
+}
+
 int main()
 {
-    frameControlTest();
+    
 
     return 0;
 }
