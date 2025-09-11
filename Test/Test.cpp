@@ -271,34 +271,32 @@ void DeleteTest() {
     delete p2;
 }
 
-class CPlyaer {
+class CPlayer {
 public:
-    // getter/setter 존재 시 캡슐화를 유지할 수 없다. 특히 set
-    // getter/setter가 필요하면 해당 변수의 위치가 잘못된 것이다.
-    // 판단/설정 로직을 가진 멤버함수를 생성해야 캡슐화를 유지할 수 있다.
     int GetHp() {
-        return _hp;
+        return 0;
     }
 
-    int SetHp(int hp) {
+    void SetHp(int hp) {
         _hp = hp;
     }
 
+    void TestFunc() {
+        int a = 0;
+        a += 10;
+        cout << a << endl;
+    }
+
 private:
+    int _x;
+    int _y;
     int _hp;
 };
 
-void Test() {
-    CPlyaer player;
-
-    int hp = player.GetHp();
-    hp -= 100;
-    player.SetHp(hp);
-}
-
 int main()
 {
-    
+    CPlayer* player = new CPlayer();
+    player->TestFunc();
 
     return 0;
 }
