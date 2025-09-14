@@ -1,0 +1,188 @@
+﻿프로파일러 만들어보기
+
+- 마이크로세컨드 단위의 시간 체크 필요.
+
+
+# QueryPerformanceCounter 사용
+-----------------------------------------------------------------
+LARGE_INTEGER Start;
+LARGE_INTEGER End;
+LARGE_INTEGER Freq;
+QueryPerformanceFrequency(&Freq);	// 1초의 진동주기
+
+QueryPerformanceCounter(&Start);
+Sleep(1000);
+QueryPerformanceCounter(&End);
+
+초단위의 시간 = (End.QuadPart - Start.QuadPart) / Freq.QuadPart;
+
+
+
+우리는 이를 사용하여 마이크로세컨드(100만분의 1초 단위로 변경 필요) 또는 100나노 기준
+
+
+
+
+
+
+
+
+# 프로파일링 데이터 출력 샘플 (파일저장)
+-------------------------------------------------------------------------------
+
+           Name  |     Average  |        Min   |        Max   |      Call |
+--------------------------------------------------------------------------- 
+ GQCS IOComplete |    63.0779㎲ |     0.9643㎲ | 17750.9230㎲ |     43620  
+    CompleteRecv |    91.7757㎲ |    24.5898㎲ |  1747.0657㎲ |     12899  
+     PacketAlloc |     1.5286㎲ |     0.9643㎲ |   790.2478㎲ |     53305  
+  Recv BufferDeq |     1.5132㎲ |     0.9643㎲ |   388.1327㎲ |     53305  
+    PacketAddref |     1.4981㎲ |     0.9643㎲ |  1610.8712㎲ |     53305  
+ WorkerPacketPut |     1.5134㎲ |     0.9643㎲ |   720.3357㎲ |     53305  
+      PacketFree |     1.5000㎲ |     0.9643㎲ |   456.5983㎲ |    160419  
+        RecvPost |    14.4911㎲ |     7.7144㎲ |  2958.0050㎲ |     12899  
+      RecvPost 1 |     1.3453㎲ |     0.9643㎲ |    12.5360㎲ |     12899  
+    WSARecv Call |     8.5767㎲ |     2.4108㎲ |  2951.2549㎲ |     12899  
+    CompleteSend |    25.0374㎲ |     8.6787㎲ |   934.8935㎲ |     17075  
+  CompleteSend 2 |    11.5014㎲ |     3.3751㎲ |   896.3213㎲ |     17075  
+ SendPost Worker |     8.8614㎲ |     0.9643㎲ |   924.7683㎲ |     17075  
+ WorkerPacketGet |     1.7092㎲ |     0.9643㎲ | 16046.0321㎲ |     64566  
+      SendPacket |    10.3646㎲ |     3.8572㎲ |  1956.5745㎲ |     52889  
+        SendPost |     6.8268㎲ |     0.9643㎲ |  1073.2713㎲ |     52889  
+    WSASend Call |    24.2678㎲ |     5.3037㎲ |  1069.4140㎲ |     15351  
+
+-------------------------------------------------------------------------------
+
+
+# 실제 코드에서 사용할 때
+------------------------------------------------------------------------------
+
+PRO_BEGIN("Func1");
+
+TestCode....
+
+
+PRO_END("Func1");
+
+
+
+
+
+
+
+# PRO_BEGIN / PRO_END 는 매크로를 사용해서 컴파일 제외가 되도록 한다.
+-------------------------------------------------------------------------------
+#define PROFILE
+
+
+#ifdef PROFILE
+	#define PRO_BEGIN(TagName)	ProfileBegin(TagName)
+	#define PRO_END(TagName)	ProfileEnd(TagName)
+#elseif
+
+	#define PRO_BEGIN(TagName)
+	#define PRO_END(TagName)
+
+
+
+
+
+
+
+
+
+
+
+
+////  클래스 생성자 소멸자를 사용한 begin, end 자동화
+
+class Profile
+{
+	public:
+	Profile(const char *tag)
+	{
+		Begin(tag);
+		_tag = tag;
+	}
+	~Profile()
+	{
+		End(_tag);
+	}
+
+	const char *_tag;
+}
+
+
+
+
+void Func()
+{
+	Profile p1("Func A");
+	..
+	..
+	if ( ... )
+	{
+		return;
+	}
+
+	{
+		Profile p2("Func B");
+		...
+		...
+	}
+
+}
+
+
+
+
+
+struct PROFILE_SAMPLE
+{
+	long			lFlag;				// 프로파일의 사용 여부. (배열시에만)
+	WCHAR			szName[64];			// 프로파일 샘플 이름.
+
+	LARGE_INTEGER	lStartTime;			// 프로파일 샘플 실행 시간.
+
+	__int64			iTotalTime;			// 전체 사용시간 카운터 Time.	(출력시 호출회수로 나누어 평균 구함)
+	__int64			iMin[2];			// 최소 사용시간 카운터 Time.	(초단위로 계산하여 저장 / [0] 가장최소 [1] 다음 최소 [2])
+	__int64			iMax[2];			// 최대 사용시간 카운터 Time.	(초단위로 계산하여 저장 / [0] 가장최대 [1] 다음 최대 [2])
+
+	__int64			iCall;				// 누적 호출 횟수.
+
+};
+
+
+위 구조체를 전역 배열 또는 리스트 등으로 관리.
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 하나의 함수 Profiling 시작, 끝 함수.
+//
+// Parameters: (char *)Profiling이름.
+// Return: 없음.
+/////////////////////////////////////////////////////////////////////////////
+void ProfileBegin(WCHAR *szName);
+void ProfileEnd(WCHAR *szName);
+
+/////////////////////////////////////////////////////////////////////////////
+// Profiling 된 데이타를 Text 파일로 출력한다.
+//
+// Parameters: (char *)출력될 파일 이름.
+// Return: 없음.
+/////////////////////////////////////////////////////////////////////////////
+void ProfileDataOutText(WCHAR *szFileName);
+
+/////////////////////////////////////////////////////////////////////////////
+// 프로파일링 된 데이터를 모두 초기화 한다.
+//
+// Parameters: 없음.
+// Return: 없음.
+/////////////////////////////////////////////////////////////////////////////
+void ProfileReset(void);
+
+
+
+
+
+
