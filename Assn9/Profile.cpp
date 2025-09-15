@@ -64,24 +64,24 @@ void ProfileEnd(const string& szName) {
     LARGE_INTEGER lEndTime;
     QueryPerformanceCounter(&lEndTime);
 
-    __int64 elapsedMicro = (lEndTime.QuadPart - pd->lStartTime.QuadPart) * 1000000 / static_cast<__int64>(g_freq.QuadPart);
+    __int64 elapsedClocks = lEndTime.QuadPart - pd->lStartTime.QuadPart;
 
-    pd->iTotalTime += elapsedMicro;
+    pd->iTotalTime += elapsedClocks;
 
-    if (elapsedMicro < pd->iMin[0]) {
+    if (elapsedClocks < pd->iMin[0]) {
         pd->iMin[1] = pd->iMin[0];
-        pd->iMin[0] = elapsedMicro;
+        pd->iMin[0] = elapsedClocks;
     }
-    else if (elapsedMicro < pd->iMin[1]) {
-        pd->iMin[1] = elapsedMicro;
+    else if (elapsedClocks < pd->iMin[1]) {
+        pd->iMin[1] = elapsedClocks;
     }
 
-    if (elapsedMicro > pd->iMax[0]) {
+    if (elapsedClocks > pd->iMax[0]) {
         pd->iMax[1] = pd->iMax[0];
-        pd->iMax[0] = elapsedMicro;
+        pd->iMax[0] = elapsedClocks;
     }
-    else if (elapsedMicro > pd->iMax[1]) {
-        pd->iMax[1] = elapsedMicro;
+    else if (elapsedClocks > pd->iMax[1]) {
+        pd->iMax[1] = elapsedClocks;
     }
 
     pd->iCall++;
@@ -90,7 +90,7 @@ void ProfileEnd(const string& szName) {
 void ProfileDataOutText(const string& filename)
 {
     ofstream fout(filename);
-    if (!fout.is_open()) {
+    if (fout.is_open() == false) {
         return;
     }
 
@@ -104,22 +104,22 @@ void ProfileDataOutText(const string& filename)
             continue;
         }
 
-        double avg = (double)pd.iTotalTime / pd.iCall;
-        double min = (double)pd.iMin[0];
-        double max = (double)pd.iMax[0];
-
+        double avg = (double)pd.iTotalTime / pd.iCall * 1000000.0 / g_freq.QuadPart;
+        double min = (double)pd.iMin[0] * 1000000.0 / g_freq.QuadPart;
+        double max = (double)pd.iMax[0] * 1000000.0 / g_freq.QuadPart;
+        cout << g_freq.QuadPart << endl;
         fout << setw(15) << pd.szName << " | "
-            << setw(10) << fixed << setprecision(4) << avg << "§Á | "
-            << setw(10) << min << "§Á | "
-            << setw(10) << max << "§Á | "
-            << setw(8) << pd.iCall << "\n";
+            << setw(10) << fixed << setprecision(1) << avg << "§Á | "
+            << setw(10) << fixed << setprecision(1) << min << "§Á | "
+            << setw(10) << fixed << setprecision(1) << max << "§Á | "
+            << setw(10) << pd.iCall << "\n";
     }
 
     fout << "---------------------------------------------------------------------------\n";
     fout.close();
 }
 
-void ProfileReset(void)
+void ProfileReset()
 {
     for (PROFILE_DATA& i : g_profileDatas) {
         i.lFlag = false;

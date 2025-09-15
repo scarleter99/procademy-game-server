@@ -3,26 +3,26 @@
 #include <iostream>
 #include "Profile.h"
 
-void SleepTest() {
-    PRO_BEGIN(L"SleepTest");
-    cout << "SleepTest" << endl;
-    PRO_END(L"SleepTest");
+void CoutTest() {
+    PRO_BEGIN("CoutTest");
+    cout << "CoutTest" << endl;
+    PRO_END("CoutTest");
 }
 
-void SleepTest2() {
-    PRO_BEGIN(L"SleepTest2");
-    for (int i = 0; i < 10; i++) {
-        SleepTest();
+void CoutTest2() {
+    PRO_BEGIN("CoutTest2");
+    for (int i = 0; i < 5; i++) {
+        CoutTest();
     }
-    PRO_END(L"SleepTest2");
+    PRO_END("CoutTest2");
 }
 
 int main()
 {
     for (int i = 0; i < 1000; i++) {
-        SleepTest2();
+        CoutTest2();
     }
 
-    ProfileDataOutText(L"Data/ProfileData.txt");
+    ProfileDataOutText("Data/ProfileData.txt");
     ProfileReset();
 }
