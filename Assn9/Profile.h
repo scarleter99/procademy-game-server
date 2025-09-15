@@ -1,29 +1,31 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 using namespace std;
 
 #ifdef PROFILE
-#define PRO_BEGIN(TagName)	ProfileBegin(TagName)
-#define PRO_END(TagName)	ProfileEnd(TagName)
+    #define PRO_BEGIN(TagName)	ProfileBegin(TagName)
+    #define PRO_END(TagName)	ProfileEnd(TagName)
 #else
-#define PRO_BEGIN(TagName)
-#define PRO_END(TagName)
+    #define PRO_BEGIN(TagName)
+    #define PRO_END(TagName)
 #endif
+
+#define MAX_PROFILE_FUNCTION 20
 
 struct PROFILE_DATA
 {
-    bool			lFlag = false;				// ÇÁ·ÎÆÄÀÏÀÇ »ç¿ë ¿©ºÎ. (¹è¿­½Ã¿¡¸¸)
-    string			szName = "";				// ÇÁ·ÎÆÄÀÏ »ùÇÃ ÀÌ¸§.
+    bool			lFlag = false;				// í”„ë¡œíŒŒì¼ì˜ ì‚¬ìš© ì—¬ë¶€. (ë°°ì—´ì‹œì—ë§Œ)
+    string			szName = "";				// í”„ë¡œíŒŒì¼ ìƒ˜í”Œ ì´ë¦„.
 
-    LARGE_INTEGER	lStartTime{};				// ÇÁ·ÎÆÄÀÏ »ùÇÃ ½ÇÇà ½Ã°£.
+    LARGE_INTEGER	lStartTime{};				// í”„ë¡œíŒŒì¼ ìƒ˜í”Œ ì‹¤í–‰ ì‹œê°„.
 
-    __int64			iTotalTime = 0;				// ÀüÃ¼ »ç¿ë½Ã°£ Ä«¿îÅÍ Time.
-    __int64			iMin[2] = { 0, 0 };			// ÃÖ¼Ò »ç¿ë½Ã°£ Ä«¿îÅÍ Time.
-    __int64			iMax[2] = { 0, 0 };			// ÃÖ´ë »ç¿ë½Ã°£ Ä«¿îÅÍ Time.
+    __int64			iTotalTime = 0;				// ì „ì²´ ì‚¬ìš©ì‹œê°„ ì¹´ìš´í„° Time.
+    __int64			iMin[2] = { 0, 0 };			// ìµœì†Œ ì‚¬ìš©ì‹œê°„ ì¹´ìš´í„° Time.
+    __int64			iMax[2] = { 0, 0 };			// ìµœëŒ€ ì‚¬ìš©ì‹œê°„ ì¹´ìš´í„° Time.
 
-    __int64			iCall = 0;					// ´©Àû È£Ãâ È½¼ö.
+    __int64			iCall = 0;					// ëˆ„ì  í˜¸ì¶œ íšŸìˆ˜.
 
 };
 
@@ -33,4 +35,4 @@ void ProfileDataOutText(const string& szFileName);
 void ProfileReset();
 
 inline LARGE_INTEGER g_freq;
-inline PROFILE_DATA g_profileDatas[20];
+inline PROFILE_DATA g_profileDatas[MAX_PROFILE_FUNCTION];
