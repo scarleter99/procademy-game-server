@@ -1,12 +1,18 @@
+#include <windows.h>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
 #include "Profile.h"
+using namespace std;
 
 void ProfileBegin(const string& szName) {
     if (g_freq.QuadPart == 0) {
         QueryPerformanceFrequency(&g_freq);
     }
 
-    PROFILE_DATA* pd = nullptr;
-    for (PROFILE_DATA& i : g_profileDatas) {
+    ProfileData* pd = nullptr;
+    for (ProfileData& i : g_profileDatas) {
         if (i.lFlag == false) {
             continue;
         }
@@ -18,7 +24,7 @@ void ProfileBegin(const string& szName) {
     }
 
     if (pd == nullptr) {
-        for (PROFILE_DATA& i : g_profileDatas) {
+        for (ProfileData& i : g_profileDatas) {
             if (i.lFlag) {
                 continue;
             }
@@ -44,8 +50,8 @@ void ProfileBegin(const string& szName) {
 }
 
 void ProfileEnd(const string& szName) {
-    PROFILE_DATA* pd = nullptr;
-    for (PROFILE_DATA& i : g_profileDatas) {
+    ProfileData* pd = nullptr;
+    for (ProfileData& i : g_profileDatas) {
         if (i.lFlag == false) {
             continue;
         }
@@ -87,7 +93,7 @@ void ProfileEnd(const string& szName) {
     pd->iCall++;
 }
 
-void ProfileDataOutText(const string& filename)
+void profileDataOutText(const string& filename)
 {
     ofstream fout(filename);
     if (fout.is_open() == false) {
@@ -99,7 +105,7 @@ void ProfileDataOutText(const string& filename)
 
     for (int i = 0; i < 20; ++i)
     {
-        const PROFILE_DATA& pd = g_profileDatas[i];
+        const ProfileData& pd = g_profileDatas[i];
         if (pd.lFlag == 0 || pd.iCall == 0) {
             continue;
         }
@@ -121,7 +127,7 @@ void ProfileDataOutText(const string& filename)
 
 void ProfileReset()
 {
-    for (PROFILE_DATA& i : g_profileDatas) {
+    for (ProfileData& i : g_profileDatas) {
         i.lFlag = false;
     }
 }

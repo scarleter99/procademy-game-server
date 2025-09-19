@@ -1,8 +1,4 @@
-﻿#include <windows.h>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-using namespace std;
+﻿using namespace std;
 
 #ifdef PROFILE
     #define PRO_BEGIN(TagName)	ProfileBegin(TagName)
@@ -12,9 +8,9 @@ using namespace std;
     #define PRO_END(TagName)
 #endif
 
-#define MAX_PROFILE_FUNCTION 20
+#define MAX_PROFILE_DATA 100
 
-struct PROFILE_DATA
+struct ProfileData
 {
     bool			lFlag = false;				// 프로파일의 사용 여부. (배열시에만)
     string			szName = "";				// 프로파일 샘플 이름.
@@ -31,8 +27,8 @@ struct PROFILE_DATA
 
 void ProfileBegin(const string& szName);
 void ProfileEnd(const string& szName);
-void ProfileDataOutText(const string& szFileName);
+void profileDataOutText(const string& szFileName);
 void ProfileReset();
 
 inline LARGE_INTEGER g_freq;
-inline PROFILE_DATA g_profileDatas[MAX_PROFILE_FUNCTION];
+inline ProfileData g_profileDatas[MAX_PROFILE_DATA];
