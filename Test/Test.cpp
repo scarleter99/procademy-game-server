@@ -293,6 +293,47 @@ private:
     int _hp;
 };
 
+struct AllocInfo
+{
+    uintptr_t ptr;
+    int size;
+    string FileName;
+    int LineNo;
+    bool isArray;
+};
+
+void* operator new(size_t size, string file, int Line) // 매크로 처리
+{
+    void* adr = malloc(size); //2
+    return adr;
+}
+
+void* operator new[](size_t size, string file, int Line) // 실제 크기 + 4가 할당된다.
+{
+    void* adr = malloc(size);
+    return adr;
+}
+
+// 직접 사용
+void operator delete (void* ptr) 
+{
+    delete ptr;
+}
+
+void operator delete[](void* ptr) //  실제 주소-4가 들어온다.
+{
+    delete[] ptr;
+}
+
+// 직접 사용안함
+void operator delete (void* ptr, string file, int Line) {}
+void operator delete[](void* ptr, string file, int Line) {}
+
+void operatorTest() {
+    int* p = new("file.cpp", 30) int;
+    char* p = new("file.cpp", 30) char[10];
+}
+
 int main()
 {
     CPlayer* player = new CPlayer();
