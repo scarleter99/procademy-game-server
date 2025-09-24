@@ -331,7 +331,7 @@ void operator delete[](void* ptr, string file, int Line) {}
 
 void operatorTest() {
     int* p = new("file.cpp", 30) int;
-    char* p = new("file.cpp", 30) char[10];
+    char* p2 = new("file.cpp", 30) char[10];
 }
 
 int main()
