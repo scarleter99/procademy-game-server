@@ -1,7 +1,9 @@
-﻿#define PROFILE
+﻿#include <iostream>
 
-#include <iostream>
+#include <windows.h>
 #include "Profile.h"
+
+#define PROFILE
 
 void CoutTest() {
     PRO_BEGIN("CoutTest");
@@ -23,6 +25,6 @@ int main()
         CoutTest2();
     }
 
-    ProfileDataOutText("Data/ProfileData.txt");
+    profileDataOutText("Data/ProfileData.txt");
     ProfileReset();
 }
