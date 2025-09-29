@@ -334,10 +334,33 @@ void operatorTest() {
     char* p2 = new("file.cpp", 30) char[10];
 }
 
+class CTest
+{
+    int _a;
+    int _b;
+    int _c;
+    CTest* i;
+
+public:
+    void CTestFunc() {
+
+        int x;
+        int* p = &x;
+        p -= 2;
+        *p = 0; // this 포인터 오염
+
+        x = _b; // 오류 발생
+        _b = 0;
+        cout << _b << endl;
+    }
+};
+
 int main()
 {
-    CPlayer* player = new CPlayer();
-    player->TestFunc();
+    void* p = malloc(sizeof(CTest));
+    CTest* c = new(p) CTest;
+    new(p) CTest;
+
 
     return 0;
 }
